@@ -11,6 +11,20 @@ The dashboard is designed around two main areas of analysis:
 
 The datasets are linked through the shared **Client_Num** field, allowing transaction behaviour to be analysed alongside customer characteristics.
 
+## Dashboard Preview
+
+### 1. Credit Card Transaction Report
+
+![Credit Card Transaction Dashboard](Dashboard_Transaction.png)
+
+The transaction dashboard provides a financial overview of the credit card portfolio, including **£57M revenue**, **£8.0M total interest**, **£46M transaction amount** and **667K transactions**, alongside quarterly performance and revenue breakdowns by expenditure type, education, customer job and card category.
+
+### 2. Credit Card Customer Report
+
+![Credit Card Customer Dashboard](Dashboard_Customer.png)
+
+The customer dashboard focuses on customer demographics and revenue segmentation, including **£57M revenue**, **£588M customer income** and a **3.19 customer satisfaction score**, with analysis by gender, income group, education, occupation, age group and geography.
+
 ## Dashboard Reports
 
 ### Credit Card Transaction Report
