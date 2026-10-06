@@ -1,0 +1,11 @@
+{
+  "records": 10293,
+  "revenue": 56517010.81,
+  "interest": 7982479.8100000005,
+  "transaction_amount": 45533021,
+  "transactions": 667234,
+  "customer_income_sum": 587599783,
+  "satisfaction_mean": 3.194695424074614,
+  "start": "2023-01-01",
+  "end": "2023-12-31"
+}

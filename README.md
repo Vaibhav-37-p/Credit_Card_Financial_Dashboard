@@ -1,85 +1,98 @@
 # Credit Card Financial Dashboard
 
-A Power BI portfolio project analysing credit card transaction performance and customer behaviour. The project combines transaction-level financial data with customer demographic information to provide a clearer view of revenue drivers, card usage, spending patterns and customer segments.
+A portfolio project exploring card usage, recorded financial amounts and customer segments in a **2023 credit-card dataset**. The corrected analysis combines the base and additional files, validates a one-to-one customer join, and reconciles **10,293 records**.
 
-## Project Overview
+## Dashboard previews
 
-The dashboard is designed around two main areas of analysis:
-
-- **Credit Card Transaction Analysis** — explores transaction amounts and volumes, card categories, expenditure types, transaction methods, credit limits, revolving balances, interest earned and account delinquency.
-- **Customer Analysis** — explores customer demographics and characteristics including age, gender, education, marital status, state, occupation, income, home/car ownership and customer satisfaction.
-
-The datasets are linked through the shared **Client_Num** field, allowing transaction behaviour to be analysed alongside customer characteristics.
-
-## Dashboard Preview
-
-### 1. Credit Card Transaction Report
+### Transaction performance
 
 ![Credit Card Transaction Dashboard](Dashboard_Transaction.png)
 
-The transaction dashboard provides a financial overview of the credit card portfolio, including **£57M revenue**, **£8.0M total interest**, **£46M transaction amount** and **667K transactions**, alongside quarterly performance and revenue breakdowns by expenditure type, education, customer job and card category.
-
-### 2. Credit Card Customer Report
+### Customer profile
 
 ![Credit Card Customer Dashboard](Dashboard_Customer.png)
 
-The customer dashboard focuses on customer demographics and revenue segmentation, including **£57M revenue**, **£588M customer income** and a **3.19 customer satisfaction score**, with analysis by gender, income group, education, occupation, age group and geography.
+This originated as a Power BI portfolio project. **The current PNGs and PDFs are static previews regenerated with Python/Matplotlib from the included CSVs.** The original editable Power BI model is not included; these files do not provide interactive slicers or prove the original DAX implementation.
 
-## Dashboard Reports
+## Verified results
 
-### Credit Card Transaction Report
+| Measure | Result | Meaning |
+|---|---:|---|
+| Matched records | 10,293 | Distinct `Client_Num` after appending both update files |
+| Project revenue metric | 56,517,010.81 | Transaction amount + annual fees + interest earned |
+| Transaction amount | 45,533,021 | Sum of `Total_Trans_Amt` |
+| Interest earned | 7,982,479.81 | Sum of `Interest_Earned` |
+| Transaction count | 667,234 | Sum of transaction-volume fields, not CSV row count |
+| Recorded customer income | 587,599,783 | Sum of `Income`; income period is not specified |
+| Mean satisfaction score | 3.19 | Unweighted customer-record average |
 
-The transaction report focuses on financial and usage performance across the credit card portfolio. It supports analysis of:
+**Currency:** The source CSVs do not identify a currency. All monetary values therefore use source units, without a £ or $ symbol and without currency conversion. Earlier README/report versions used inconsistent symbols.
 
-- Transaction amount and transaction volume
-- Card categories including Blue, Silver, Gold and Platinum
-- Credit limits and revolving balances
-- Chip, swipe and online transaction methods
-- Spending categories such as bills, entertainment, food, fuel, grocery and travel
-- Interest earned and annual fees
-- Weekly and quarterly transaction trends
-- Delinquent accounts
+**Revenue definition:** This is a project-specific composite used to reconcile the original dashboard, not recognised bank revenue, net income or profit. Customer transaction spending is not automatically revenue earned by the issuer.
 
-### Credit Card Customer Report
+## Business findings
 
-The customer report provides a demographic and behavioural view of the customer base, including:
+- **Blue cards contribute 47.19M** to the project revenue metric, approximately **83.5%** of its total. This describes concentration in the dataset; it does not prove that Blue cards are more profitable or riskier.
+- **Bills is the largest expenditure category**, contributing approximately **14.00M** to the same metric. Category revenue is not transaction frequency or a causal explanation of spending.
+- **Q4 has the highest recorded quarterly project revenue, approximately 14.50M.** The dataset alone does not establish a holiday effect or margin expansion.
+- Customer groups can be compared by recorded totals, but differences also reflect their sizes. Compare per-customer values and additional outcomes before making targeting or retention decisions.
+- Scores range from **1 to 5 in the supplied records**; the mean is **3.19**. The source does not document the response labels, survey method or benchmark. It is not sufficient evidence of dissatisfaction or churn risk.
 
-- Customer age and gender
-- Education and marital status
-- Geographic distribution
-- Employment and occupation
-- Customer income
-- Car and house ownership
-- Personal loan status
-- Customer satisfaction scores
+## Data preparation and model
 
-## Data
+1. Read `credit_card.csv` (**10,108 rows**) and `cc_add.csv` (**185 rows**).
+2. Rename update-file `Total_Trans_Ct` to `Total_Trans_Vol` before appending. Without this step, transaction counts could be understated.
+3. Append `customer.csv` (**10,108 rows**) and `cust_add.csv` (**185 rows**).
+4. Check that `Client_Num` is unique on both sides and the customer-ID sets match.
+5. Join on `Client_Num` with a **one-to-one validation**; the resulting dataset has **10,293 rows**, so the join does not multiply the population.
+6. Parse `Week_Start_Date` as day-month-year. Dates span 1 January–31 December 2023.
+7. Calculate the project revenue metric and group the matched rows for each visual.
 
-The repository contains the datasets used for the analysis:
+The credit-card CSV has one record per client in this snapshot and includes aggregated transaction amounts and counts. It is **not an individual-transaction event log**. Its weekly reporting field should not be interpreted as a date for every underlying purchase.
 
-- `credit_card.csv` — credit card transaction and account information
-- `customer.csv` — customer demographic and profile information
-- `cc_add.csv` — additional credit card records
-- `cust_add.csv` — additional customer records
+The customer preview uses age bands **under 30, 30–39, 40–49, 50–59 and 60+**. Its state chart shows the top five states plus an explicit “Other states” group so totals remain complete.
 
-The credit card data includes fields such as **Card Category, Annual Fees, Credit Limit, Total Transaction Amount, Total Transaction Volume, Average Utilisation Ratio, Transaction Method, Expenditure Type, Interest Earned and Delinquent Account status**.
+## Calculation example
 
-The customer data includes fields such as **Age, Gender, Education, Marital Status, State, Car/House Ownership, Personal Loan, Occupation, Income and Customer Satisfaction Score**.
+Equivalent DAX for a table named `CreditCard` after appending the files:
 
-## Project Files
+```dax
+Project Revenue =
+    SUM(CreditCard[Total_Trans_Amt])
+    + SUM(CreditCard[Annual_Fees])
+    + SUM(CreditCard[Interest_Earned])
 
-- [Credit Card Transaction Report](Credit_Card_Transaction_Report.pdf)
-- [Credit Card Customer Report](Credit_Card_Report_Customer.pdf)
-- [Professional Insights Report](Credit_Card_Professional_Insights_Report.pdf)
+Transaction Count = SUM(CreditCard[Total_Trans_Vol])
+```
 
-## Skills Demonstrated
+These are documented equivalent definitions, not recovered measures from the unavailable original Power BI model. The executed calculations are inspectable in [rebuild_preview.py](rebuild_preview.py).
 
-**Power BI • Data Analysis • Data Visualisation • Data Modelling • Dashboard Design • KPI Analysis • Customer Segmentation • Financial Analysis • Data Storytelling**
+## Reproduce the outputs
 
-## Project Purpose
+```bash
+python -m pip install -r requirements.txt
+python rebuild_preview.py
+python build_insights_report.py
+```
 
-This project was created as part of my data analytics portfolio to demonstrate how financial transaction and customer data can be combined and transformed into meaningful business insights. The dashboard focuses on presenting financial performance and customer behaviour in a structured format that can support business reporting and decision-making.
+The first script rebuilds the static dashboards, checks the join, and writes the metric/segment summaries. The second rebuilds the concise insights PDF from those summaries.
 
-## Author
+## Project files
+
+- [Transaction report PDF](Credit_Card_Transaction_Report.pdf)
+- [Customer report PDF](Credit_Card_Report_Customer.pdf)
+- [Insights report PDF](Credit_Card_Professional_Insights_Report.pdf)
+- [Verified metric summary](verified_metrics.json)
+- `summary_*.csv` — results by card category, quarter, state, job, expenditure and gender
+- `credit_card.csv`, `customer.csv`, `cc_add.csv`, `cust_add.csv` — original supplied records
+- `rebuild_preview.py`, `build_insights_report.py`, `requirements.txt` — reproducible calculations and rendering
+
+## Scope and limitations
+
+The supplied files do not document their original publisher, licence, sampling process or whether the records are synthetic. Findings describe this portfolio dataset only. They do not establish customer lifetime value, an addressable market gap, profitability, credit risk or causal effects. The revised insights report removes those unsupported claims.
+
+## Skills demonstrated
+
+Data validation · Schema alignment · Join checks · Aggregation · Customer segmentation · Metric documentation · Reproducible analysis · Dashboard presentation
 
 **Vaibhav Panchal**
