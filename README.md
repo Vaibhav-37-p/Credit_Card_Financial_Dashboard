@@ -1,6 +1,6 @@
 # Credit Card Financial Dashboard
 
-A portfolio project exploring card usage, recorded financial amounts and customer segments in a **2023 credit-card dataset**. The corrected analysis combines the base and additional files, validates a one-to-one customer join, and reconciles **10,293 records**.
+A Power BI portfolio project exploring card usage, recorded financial amounts and customer segments in a **2023 credit-card dataset**. The corrected analysis combines the base and additional files, validates a one-to-one customer join, and reconciles **10,293 records**.
 
 ## Dashboard previews
 
@@ -12,7 +12,11 @@ A portfolio project exploring card usage, recorded financial amounts and custome
 
 ![Credit Card Customer Dashboard](Dashboard_Customer.png)
 
-This originated as a Power BI portfolio project. **The current PNGs and PDFs are static previews regenerated with Python/Matplotlib from the included CSVs.** The original editable Power BI model is not included; these files do not provide interactive slicers or prove the original DAX implementation.
+These are the original dashboard screenshots. The PDF links below show the matching original report pages. An editable Power BI model is not included in this repository.
+
+## Tools
+
+**Power BI** — dashboard design and visualisation. **CSV** — source data.
 
 ## Verified results
 
@@ -50,7 +54,7 @@ This originated as a Power BI portfolio project. **The current PNGs and PDFs are
 
 The credit-card CSV has one record per client in this snapshot and includes aggregated transaction amounts and counts. It is **not an individual-transaction event log**. Its weekly reporting field should not be interpreted as a date for every underlying purchase.
 
-The customer preview uses age bands **under 30, 30–39, 40–49, 50–59 and 60+**. Its state chart shows the top five states plus an explicit “Other states” group so totals remain complete.
+**Preview note:** The original customer screenshot contains a chart titled “Revenue By Job” with state codes such as TX, NY and CA; it represents revenue by state. The screenshot is preserved as the original design. Its age-group boundaries cannot be confirmed without the editable model.
 
 ## Calculation example
 
@@ -65,17 +69,7 @@ Project Revenue =
 Transaction Count = SUM(CreditCard[Total_Trans_Vol])
 ```
 
-These are documented equivalent definitions, not recovered measures from the unavailable original Power BI model. The executed calculations are inspectable in [rebuild_preview.py](rebuild_preview.py).
-
-## Reproduce the outputs
-
-```bash
-python -m pip install -r requirements.txt
-python rebuild_preview.py
-python build_insights_report.py
-```
-
-The first script rebuilds the static dashboards, checks the join, and writes the metric/segment summaries. The second rebuilds the concise insights PDF from those summaries.
+These are equivalent DAX definitions for the documented metrics, not recovered measures from the original model. The totals are also available in the supporting metric and segment files below.
 
 ## Project files
 
@@ -85,7 +79,6 @@ The first script rebuilds the static dashboards, checks the join, and writes the
 - [Verified metric summary](verified_metrics.json)
 - `summary_*.csv` — results by card category, quarter, state, job, expenditure and gender
 - `credit_card.csv`, `customer.csv`, `cc_add.csv`, `cust_add.csv` — original supplied records
-- `rebuild_preview.py`, `build_insights_report.py`, `requirements.txt` — reproducible calculations and rendering
 
 ## Scope and limitations
 
@@ -93,6 +86,6 @@ The supplied files do not document their original publisher, licence, sampling p
 
 ## Skills demonstrated
 
-Data validation · Schema alignment · Join checks · Aggregation · Customer segmentation · Metric documentation · Reproducible analysis · Dashboard presentation
+Power BI · Data visualisation · Data modelling · KPI analysis · Customer segmentation · Dashboard design · Data storytelling
 
 **Vaibhav Panchal**
